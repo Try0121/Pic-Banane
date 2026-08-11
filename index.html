@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7c948">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pic Banane">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Pic Banane</title>
+<style>
+:root{--bg:#0f172a;--panel:#111827;--panel2:#1f2937;--line:#334155;--txt:#f8fafc;--muted:#94a3b8;--banana:#f7c948;--green:#65a30d;--orange:#fb923c;--red:#ef4444;--purple:#c084fc}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100vh;padding-bottom:calc(88px + env(safe-area-inset-bottom));overscroll-behavior-y:none}
+header{text-align:center;padding:calc(12px + env(safe-area-inset-top)) 12px 8px}
+h1{margin:0;font-size:1.45rem}.subtitle{font-size:.82rem;color:var(--muted);margin-top:3px}
+main{max-width:850px;margin:auto;padding:0 12px}.page{display:none}.page.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{text-align:center}.stat span{font-size:.72rem;color:var(--muted)}.stat b{display:block;color:var(--banana);font-size:1.05rem;margin-top:4px}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:9px}
+.monkeyBox,.bananaBox{min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.monkeyBox img{max-width:100%;max-height:330px;border-radius:14px}
+.stageTag{margin-top:7px;font-size:.82rem;color:#fde68a}
+.bananaBtn{border:0;background:transparent;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;padding:0}
+.bananaBtn img{width:min(310px,78vw);filter:drop-shadow(0 12px 18px #0008);transition:transform .06s ease}.bananaBtn:active img{transform:scale(.92) rotate(-2deg)}
+.tapHelp{font-size:.84rem;color:var(--muted);margin-top:4px}.float{position:fixed;z-index:1400;pointer-events:none;color:var(--banana);font-weight:900;animation:up .7s forwards}@keyframes up{to{opacity:0;transform:translateY(-65px) scale(1.25)}}
+.sectionTitle{font-size:1rem;margin:15px 2px 8px}
+.peak{background:linear-gradient(135deg,#39220e,#2a1520)}.peak button,.bigBtn{width:100%;border:0;border-radius:14px;padding:12px;background:var(--orange);font-weight:900;color:#2b1105}.peak button:disabled,.bigBtn:disabled{opacity:.35}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.small{font-size:.78rem;color:var(--muted)}
+.buyModes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.mode,.tab,.filter{border:1px solid var(--line);background:var(--panel2);color:var(--txt);border-radius:12px;padding:9px 6px;font-weight:800}.mode.active,.filter.active,.tab.active{background:var(--banana);color:#201807;border-color:var(--banana)}
+.filters{display:flex;gap:6px;overflow:auto;padding-bottom:5px}.filter{white-space:nowrap;font-size:.8rem}
+.shop,.upgradeGrid,.powerGrid{display:grid;gap:9px}.producer,.upgrade{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.name{font-weight:850}.desc{font-size:.77rem;color:var(--muted);margin-top:3px}.gain{font-size:.75rem;color:#86efac;margin-top:5px}.milestone{font-size:.73rem;color:#e9d5ff;margin-top:5px}
+.progress,.timer{height:7px;background:#263244;border-radius:999px;overflow:hidden;margin-top:6px}.progress span,.timer span{display:block;height:100%;background:var(--purple)}
+.buy{border:0;border-radius:13px;padding:10px;background:var(--banana);font-weight:900;color:#201807;min-width:110px}.buy:disabled{opacity:.35}
+.power{background:linear-gradient(135deg,#151d2e,#28172f)}.powerHead{display:flex;justify-content:space-between;gap:8px}.status{font-size:.74rem;color:#fde68a}.power button{width:100%;margin-top:8px;border:0;border-radius:13px;padding:10px;background:#60a5fa;color:#07182e;font-weight:900}.power button:disabled{opacity:.35}
+.audioRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:8px}.audioToggle{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--panel2);color:var(--txt);font-weight:800}.audioToggle.on{background:#34d399;color:#05251c}.range{width:120px}
+.tabs{position:fixed;z-index:1000;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;background:#0f172af5;border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+.tab{font-size:.78rem}.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom));z-index:1500;background:#111827;border:1px solid var(--line);padding:10px 14px;border-radius:999px;opacity:0;transition:.2s;white-space:nowrap}.toast.show{opacity:1}
+@media(max-width:650px){.hero{grid-template-columns:1fr}.monkeyBox{min-height:285px}.bananaBox{min-height:280px}.monkeyBox img{max-height:270px}}
+@media(min-width:720px){.shop,.upgradeGrid,.powerGrid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><h1>🍌 Pic Banane</h1><div class="subtitle">Le singe monte en pression. Les bananes montent encore plus vite.</div></header>
+<main>
+<section id="pagePic" class="page active">
+  <section class="stats">
+    <div class="card stat"><span>Bananes</span><b id="money">0</b></div>
+    <div class="card stat"><span>Par clic</span><b id="perClick">1</b></div>
+    <div class="card stat"><span>Par seconde</span><b id="perSec">0</b></div>
+  </section>
+  <section class="hero">
+    <div class="card monkeyBox"><img id="monkey" src="assets/monkey-stage-1.jpg"><div class="stageTag" id="stageText">Stade 1 — Début d'angoisse</div></div>
+    <div class="card bananaBox">
+      <button id="bananaBtn" class="bananaBtn" aria-label="Cliquer sur la banane"><img src="assets/banana.png"></button>
+      <div class="tapHelp">Tape la banane pour en gagner.</div>
+    </div>
+  </section>
+
+  <h2 class="sectionTitle">Pic d'angoisse</h2>
+  <section class="card peak">
+    <div class="row"><div><div class="name">Déclencher un Pic Banane</div><div class="desc">Remet à zéro la tribu, les améliorations et les pouvoirs, mais augmente définitivement le multiplicateur et fait évoluer le singe.</div></div><b id="peakBadge">Pic 0</b></div>
+    <div class="small" id="peakInfo" style="margin:9px 0"></div>
+    <button id="peakBtn">Pic indisponible</button>
+  </section>
+
+  <h2 class="sectionTitle">Audio</h2>
+  <section class="card">
+    <div class="audioRow"><span>Effets</span><div><button id="sfxToggle" class="audioToggle on">ON</button> <input id="sfxVolume" class="range" type="range" min="0" max="1" step=".05" value=".7"></div></div>
+    <div class="audioRow"><span>Musique</span><div><button id="musicToggle" class="audioToggle on">ON</button> <input id="musicVolume" class="range" type="range" min="0" max="1" step=".05" value=".3"></div></div>
+  </section>
+</section>
+
+<section id="pageTribu" class="page">
+  <section class="stats"><div class="card stat"><span>Bananes</span><b id="money2">0</b></div><div class="card stat"><span>Production</span><b id="perSec2">0</b></div><div class="card stat"><span>Unités</span><b id="units">0</b></div></section>
+  <h2 class="sectionTitle">Achat</h2>
+  <div class="buyModes">
+    <button class="mode active" data-mode="1">x1</button><button class="mode" data-mode="5">x5</button><button class="mode" data-mode="10">x10</button>
+    <button class="mode" data-mode="100">x100</button><button class="mode" data-mode="max">MAX</button><button class="mode" data-mode="next">Palier</button>
+  </div>
+  <section id="shop" class="shop"></section>
+</section>
+
+<section id="pageBoost" class="page">
+  <section class="stats"><div class="card stat"><span>Bananes</span><b id="money3">0</b></div><div class="card stat"><span>Clic</span><b id="click3">1</b></div><div class="card stat"><span>Pic</span><b id="peak3">0</b></div></section>
+  <h2 class="sectionTitle">Doigts de compétition</h2><section id="upgrades" class="upgradeGrid"></section>
+  <h2 class="sectionTitle">Pouvoirs temporaires</h2><section id="powers" class="powerGrid"></section>
+</section>
+</main>
+<nav class="tabs"><button class="tab active" data-page="pagePic">🍌 Pic</button><button class="tab" data-page="pageTribu">🌴 Tribu</button><button class="tab" data-page="pageBoost">⚡ Boosts</button></nav>
+<div id="toast" class="toast"></div>
+<script>
+const producers=[
+ {id:'ramasseur',name:'Ramasseur maladroit',cost:15,income:.2,desc:'Il ramasse les bananes tombées. Lentement.'},
+ {id:'grimpeur',name:'Grimpeur nerveux',cost:100,income:1.3,desc:'Monte aux bananiers avant de se demander pourquoi.'},
+ {id:'jardinier',name:'Jardinier tropical',cost:550,income:6.5,desc:'Fait pousser des bananes à un rythme inquiétant.'},
+ {id:'vendeur',name:'Vendeur de marché',cost:2800,income:31,desc:'Transforme chaque régime en affaire commerciale.'},
+ {id:'chef',name:'Chef de tribu',cost:14500,income:145,desc:'Organise tout le monde. Enfin, il essaie.'},
+ {id:'explorateur',name:'Explorateur de jungle',cost:75000,income:650,desc:'Découvre des réserves de bananes improbables.'},
+ {id:'laboratoire',name:'Laboratoire anti-stress',cost:390000,income:2900,desc:'Cherche scientifiquement pourquoi le singe panique.'},
+ {id:'temple',name:'Temple de la Banane',cost:2000000,income:13000,desc:'La production devient presque mystique.'}
+];
+const stages=[
+ {name:"Début d'angoisse",mult:1,img:'assets/monkey-stage-1.jpg'},
+ {name:"Angoisse modérée",mult:1.7,img:'assets/monkey-stage-2.jpg'},
+ {name:"Angoisse marquée",mult:2.8,img:'assets/monkey-stage-3.jpg'},
+ {name:"Angoisse sévère",mult:4.5,img:'assets/monkey-stage-4.jpg'},
+ {name:"Angoisse extrême",mult:7.5,img:'assets/monkey-stage-5.jpg'}
+];
+const milestones=[{count:25,mult:2},{count:50,mult:3},{count:100,mult:5},{count:250,mult:8},{count:500,mult:12}];
+const clickUpgrades=[
+ {name:'Index musclé',cost:1500,bonus:1,desc:'+1 banane par clic'},
+ {name:'Double phalange',cost:10000,bonus:4,desc:'+4 bananes par clic'},
+ {name:'Poigne de gorille',cost:50000,bonus:12,desc:'+12 bananes par clic'},
+ {name:'Doigt turbo',cost:250000,bonus:35,desc:'+35 bananes par clic'},
+ {name:'Main bananique',cost:1000000,bonus:100,desc:'+100 bananes par clic'},
+ {name:'Toucher légendaire',cost:5000000,bonus:300,desc:'+300 bananes par clic'}
+];
+const powers=[
+ {id:'frenesie',name:'Frénésie Banane',cost:25000,duration:20,cooldown:90,click:5,prod:1,desc:'Clic ×5 pendant 20 s'},
+ {id:'pluie',name:'Pluie de Bananes',cost:150000,duration:30,cooldown:300,click:1,prod:3,desc:'Production ×3 pendant 30 s'},
+ {id:'panique',name:'Panique Totale',cost:1000000,duration:45,cooldown:900,click:10,prod:5,desc:'Clic ×10 et production ×5 pendant 45 s'}
+];
+const def={money:0,total:0,clicks:0,peak:0,counts:{},upgrade:0,powers:{},audio:{sfx:true,music:true,sfxVol:.7,musicVol:.3},last:Date.now()};
+let state=load(),buyMode='1';
+let popAudio=null,musicAudio=null,audioUnlocked=false;
+
+function clone(){return JSON.parse(JSON.stringify(def))}
+function load(){try{let s={...clone(),...JSON.parse(localStorage.getItem('picBananeSave')||'{}')};s.counts=s.counts||{};s.powers=s.powers||{};s.audio={...def.audio,...(s.audio||{})};return s}catch(e){return clone()}}
+function save(){state.last=Date.now();localStorage.setItem('picBananeSave',JSON.stringify(state))}
+function count(id){return state.counts[id]||0}
+function stage(){return stages[Math.min(state.peak,stages.length-1)]}
+function mMult(c){let m=1;for(const x of milestones)if(c>=x.count)m=x.mult;return m}
+function nextM(c){return milestones.find(x=>c<x.count)||null}
+function powerMult(type){let now=Date.now(),m=1;for(const p of powers){let s=state.powers[p.id]||{};if((s.active||0)>now)m*=type==='click'?p.click:p.prod}return m}
+function clickBonus(){return clickUpgrades.slice(0,state.upgrade).reduce((a,x)=>a+x.bonus,0)}
+function clickValue(){return Math.max(1,Math.floor((stage().mult+clickBonus())*powerMult('click')))}
+function prodIncome(p){let c=count(p.id);return c*p.income*mMult(c)*stage().mult}
+function ips(){return producers.reduce((a,p)=>a+prodIncome(p),0)*powerMult('prod')}
+function unitsCount(){return Object.values(state.counts).reduce((a,b)=>a+(+b||0),0)}
+function fmt(n){if(n<1000)return Math.floor(n).toLocaleString('fr-FR');let u=['k','M','Md','B','T','Qa'],i=-1;while(n>=1000&&i<u.length-1){n/=1000;i++}return n.toLocaleString('fr-FR',{maximumFractionDigits:2})+' '+u[i]}
+function costAt(p,c){return Math.floor(p.cost*Math.pow(1.15,c))}
+function totalCost(p,q){let c=count(p.id),t=0;for(let i=0;i<q;i++)t+=costAt(p,c+i);return t}
+function maxQty(p){let c=count(p.id),q=0,t=0;while(q<100000){let n=costAt(p,c+q);if(t+n>state.money)break;t+=n;q++}return q}
+function wanted(p){let c=count(p.id);if(buyMode==='max')return maxQty(p);if(buyMode==='next'){let n=nextM(c);return n?Math.max(0,n.count-c):0}return +buyMode}
+function affordable(p,w){let c=count(p.id),q=0,t=0;for(let i=0;i<w;i++){let n=costAt(p,c+i);if(t+n>state.money)break;t+=n;q++}return q}
+function seconds(s){s=Math.max(0,Math.ceil(s));if(s<60)return s+' s';return Math.floor(s/60)+' min '+String(s%60).padStart(2,'0')+' s'}
+
+function setupAudio(){
+ popAudio=new Audio('audio/banana-pop.wav');popAudio.preload='auto';
+ musicAudio=new Audio('audio/jungle-loop.wav');musicAudio.loop=true;musicAudio.preload='auto';
+ applyAudio()
+}
+function applyAudio(){
+ if(popAudio)popAudio.volume=state.audio.sfxVol;
+ if(musicAudio){musicAudio.volume=state.audio.musicVol;if(!state.audio.music)musicAudio.pause();else if(audioUnlocked&&musicAudio.paused)musicAudio.play().catch(()=>{})}
+ sfxToggle.textContent=state.audio.sfx?'ON':'OFF';sfxToggle.classList.toggle('on',state.audio.sfx);
+ musicToggle.textContent=state.audio.music?'ON':'OFF';musicToggle.classList.toggle('on',state.audio.music);
+ sfxVolume.value=state.audio.sfxVol;musicVolume.value=state.audio.musicVol
+}
+function unlockAudio(){if(audioUnlocked)return;audioUnlocked=true;if(state.audio.music&&musicAudio)musicAudio.play().catch(()=>{})}
+function pop(){if(!state.audio.sfx||!popAudio)return;let a=popAudio.cloneNode();a.volume=state.audio.sfxVol;a.play().catch(()=>{})}
+
+function renderShop(){
+ shop.innerHTML='';
+ producers.forEach(p=>{
+  let c=count(p.id),nm=nextM(c),prev=[0,...milestones.map(x=>x.count)].filter(x=>x<=c).pop()||0,pct=nm?Math.min(100,(c-prev)/(nm.count-prev)*100):100;
+  let w=wanted(p),q=w?affordable(p,w):0,price=q?totalCost(p,q):0;
+  let bt=buyMode==='max'?(q?`MAX ×${q}<br>${fmt(price)}`:'MAX'):buyMode==='next'?(!nm?'Palier max':q?`+${q} → ${Math.min(c+q,nm.count)}<br>${fmt(price)}`:`Vers ${nm.count}`):(q?`×${q}<br>${fmt(price)}`:`×${w}`);
+  let e=document.createElement('div');e.className='card producer';
+  e.innerHTML=`<div><div class="name">${p.name} × ${c}</div><div class="desc">${p.desc}</div><div class="gain">${fmt(prodIncome(p))} bananes/s</div><div class="milestone">Bonus ×${mMult(c)}${nm?` · prochain ${nm.count} → ×${nm.mult}`:' · palier max'}</div><div class="progress"><span style="width:${pct}%"></span></div></div><button class="buy" ${q<=0?'disabled':''}>${bt}</button>`;
+  e.querySelector('button').onclick=()=>{let w2=wanted(p),q2=w2?affordable(p,w2):0;if(!q2)return;let pc=totalCost(p,q2),old=c,neu=c+q2;if(state.money<pc)return;state.money-=pc;state.counts[p.id]=neu;let hit=milestones.filter(x=>old<x.count&&neu>=x.count).pop();if(hit)toast(`${p.name} : palier ${hit.count} atteint !`);render()};
+  shop.appendChild(e)
+ })
+}
+function renderUpgrades(){
+ upgrades.innerHTML='';
+ clickUpgrades.forEach((u,i)=>{
+  let bought=i<state.upgrade,next=i===state.upgrade,e=document.createElement('div');e.className='card upgrade';
+  e.innerHTML=`<div><div class="name">${u.name}</div><div class="desc">${u.desc}<br>${bought?'Achetée pour ce Pic':next?'Disponible':'Achète les précédentes'}</div></div><button class="buy" ${(bought||!next||state.money<u.cost)?'disabled':''}>${bought?'Achetée':fmt(u.cost)}</button>`;
+  e.querySelector('button').onclick=()=>{if(!next||bought||state.money<u.cost)return;state.money-=u.cost;state.upgrade++;toast(`${u.name} débloqué !`);render()};
+  upgrades.appendChild(e)
+ })
+}
+function renderPowers(){
+ powersBox.innerHTML='';let now=Date.now();
+ powers.forEach(p=>{
+  let st=state.powers[p.id]||{},active=(st.active||0)>now,cool=(st.cool||0)>now,ar=((st.active||0)-now)/1000,cr=((st.cool||0)-now)/1000,status=active?'Actif '+seconds(ar):cool?'Recharge '+seconds(cr):'Disponible';
+  let pct=active?Math.min(100,ar/p.duration*100):cool?Math.min(100,cr/p.cooldown*100):100;
+  let e=document.createElement('div');e.className='card power';
+  e.innerHTML=`<div class="powerHead"><div class="name">${p.name}</div><div class="status">${status}</div></div><div class="desc">${p.desc}<br>Coût ${fmt(p.cost)} · recharge ${seconds(p.cooldown)}</div><div class="timer"><span style="width:${pct}%"></span></div><button ${(active||cool||state.money<p.cost)?'disabled':''}>${active?'Actif':cool?'En recharge':'Activer — '+fmt(p.cost)}</button>`;
+  e.querySelector('button').onclick=()=>{let n=Date.now(),s=state.powers[p.id]||{};if((s.active||0)>n||(s.cool||0)>n||state.money<p.cost)return;state.money-=p.cost;state.powers[p.id]={active:n+p.duration*1000,cool:n+p.cooldown*1000};toast(`${p.name} !`);render()};
+  powersBox.appendChild(e)
+ })
+}
+function peakReq(){return 1e6*Math.pow(12,state.peak)}
+function renderPeak(){
+ let max=state.peak>=stages.length-1,r=peakReq(),can=state.total>=r&&!max;
+ peakBadge.textContent='Pic '+state.peak;peak3.textContent=state.peak;
+ peakInfo.textContent=max?'Stade maximal atteint.':`${fmt(state.total)} / ${fmt(r)} bananes gagnées`;
+ peakBtn.disabled=!can;peakBtn.textContent=max?'Pic maximal':can?`Déclencher → Stade ${state.peak+2}`:`Pic à ${fmt(r)} bananes`
+}
+function render(){
+ let m=fmt(state.money),p=fmt(ips()),c=fmt(clickValue());
+ money.textContent=m;money2.textContent=m;money3.textContent=m;perClick.textContent=c;click3.textContent=c;perSec.textContent=p;perSec2.textContent=p;units.textContent=unitsCount();
+ monkey.src=stage().img;stageText.textContent=`Stade ${state.peak+1} — ${stage().name} · bonus ×${stage().mult}`;
+ renderShop();renderUpgrades();renderPowers();renderPeak()
+}
+bananaBtn.addEventListener('pointerdown',e=>{
+ e.preventDefault();unlockAudio();pop();let v=clickValue();state.money+=v;state.total+=v;state.clicks++;
+ let f=document.createElement('div');f.className='float';f.textContent='+'+fmt(v);f.style.left=(e.clientX-10)+'px';f.style.top=(e.clientY-10)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),700);render()
+});
+bananaBtn.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+let lastTap=0;bananaBtn.addEventListener('touchend',e=>{let n=Date.now();if(n-lastTap<350)e.preventDefault();lastTap=n},{passive:false});
+['gesturestart','gesturechange','gestureend'].forEach(t=>bananaBtn.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})});
+document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{buyMode=b.dataset.mode;document.querySelectorAll('.mode').forEach(x=>x.classList.toggle('active',x===b));renderShop()});
+peakBtn.onclick=()=>{let r=peakReq();if(state.total<r||state.peak>=stages.length-1)return;state.peak++;state.money=0;state.total=0;state.counts={};state.upgrade=0;state.powers={};save();toast(`Nouveau Pic : ${stage().name}`);render()};
+sfxToggle.onclick=()=>{state.audio.sfx=!state.audio.sfx;applyAudio();save()};musicToggle.onclick=()=>{unlockAudio();state.audio.music=!state.audio.music;applyAudio();save()};
+sfxVolume.oninput=e=>{state.audio.sfxVol=+e.target.value;applyAudio();save()};musicVolume.oninput=e=>{unlockAudio();state.audio.musicVol=+e.target.value;applyAudio();save()};
+function toast(x){let t=document.getElementById('toast');t.textContent=x;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1700)}
+function offline(){let now=Date.now(),sec=Math.min((now-state.last)/1000,8*3600),g=ips()*sec;if(g>1){state.money+=g;state.total+=g;toast(`Retour : +${fmt(g)} bananes`)}state.last=now}
+const powersBox=document.getElementById('powers');
+setupAudio();document.addEventListener('pointerdown',unlockAudio,{once:true});offline();render();
+setInterval(()=>{let g=ips()/10;state.money+=g;state.total+=g;render()},100);
+setInterval(save,10000);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+</script>
+</body>
+</html>
