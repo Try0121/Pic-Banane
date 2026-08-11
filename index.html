@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b2c49">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Pic Banane V3</title>
+<style>
+:root{
+ --bg:#04131f;--nav:#071a2a;--panel:#08233a;--panel2:#0d3150;--line:#126aa4;
+ --yellow:#ffd900;--orange:#ff8a19;--red:#ff4d48;--text:#fff;--muted:#c4d9e8;--green:#63d38c
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:radial-gradient(circle at 50% 20%,#0b3658,#04131f 68%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;overscroll-behavior:none}
+body{min-height:100vh;padding-bottom:86px}
+button{font:inherit}
+.shell{max-width:1180px;margin:auto;padding:10px}
+.topbar{display:grid;grid-template-columns:1.15fr repeat(3,1fr) auto;gap:8px;align-items:stretch}
+.logo{border-radius:22px;overflow:hidden;border:2px solid var(--line);background:#03111d;min-height:86px}
+.logo img{width:100%;height:100%;object-fit:cover;display:block}
+.stat{background:linear-gradient(180deg,#0b3150,#071d31);border:2px solid var(--line);border-radius:22px;padding:10px 8px;text-align:center;box-shadow:0 8px 25px #0006}
+.stat b{display:block;color:#fff;font-size:clamp(20px,3vw,34px);line-height:1}
+.stat small{color:var(--muted);font-size:12px}
+.audioBtns{display:flex;gap:6px}
+.round{width:52px;height:52px;border-radius:50%;border:2px solid var(--line);background:var(--panel);color:#fff;font-size:22px}
+.stageTop{max-width:760px;margin:8px auto;background:linear-gradient(180deg,#0b3150,#071d31);border:2px solid var(--line);border-radius:20px;padding:9px 14px}
+.stageTopLine{display:flex;justify-content:space-between;font-weight:900}
+.stageTopLine b{color:var(--yellow)}
+.stageBar{height:15px;background:#06131f;border:2px solid #0d6098;border-radius:999px;overflow:hidden;margin-top:6px}
+.stageFill{height:100%;width:0;background:linear-gradient(90deg,#ffe600,#ffc400,#ff8a00);transition:width .2s}
+.stageHint{text-align:center;color:var(--muted);font-size:12px;margin-top:4px}
+.gameGrid{display:grid;grid-template-columns:150px minmax(0,1fr) 170px;gap:10px;align-items:stretch}
+.sidePanel{background:linear-gradient(180deg,#092945,#061a2a);border:2px solid var(--line);border-radius:22px;padding:10px;text-align:center;box-shadow:0 10px 25px #0006}
+.sidePanel h3{margin:2px 0 8px;font-size:16px}
+.anxietyMeter{height:300px;width:40px;margin:8px auto;border:3px solid #135f91;border-radius:999px;background:#03111c;padding:4px;display:flex;align-items:end}
+.anxietyFill{width:100%;height:0;border-radius:999px;background:linear-gradient(180deg,#ffe700,#ffac00,#ff4d2e);transition:height .25s}
+.bigPct{font-size:26px;color:var(--yellow);font-weight:1000}
+.hero{position:relative;min-height:600px;border:2px solid var(--line);border-radius:28px;overflow:hidden;background:#061a2a;box-shadow:0 15px 40px #0008}
+.hero img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.bananaHit{position:absolute;left:47%;top:34%;width:37%;height:42%;border:0;background:transparent;touch-action:manipulation;cursor:pointer}
+.bananaHit:active{transform:scale(.97)}
+.hero.flash1 img{animation:hit1 .17s ease}.hero.flash2 img{animation:hit2 .17s ease}
+@keyframes hit1{35%{transform:translateX(9px) rotate(1deg) scale(.995)}70%{transform:translateX(-5px) rotate(-1deg)}}
+@keyframes hit2{35%{transform:translateX(-9px) rotate(-1deg) scale(.995)}70%{transform:translateX(5px) rotate(1deg)}}
+.cta{position:absolute;left:50%;bottom:2.8%;transform:translateX(-50%);padding:8px 16px;background:#061522e8;border:3px solid var(--yellow);border-radius:18px;color:var(--yellow);font-weight:1000;font-size:clamp(18px,3vw,34px);text-shadow:2px 2px #000;white-space:nowrap}
+.float{position:absolute;z-index:4;color:var(--yellow);font-weight:1000;font-size:28px;text-shadow:2px 2px #000;pointer-events:none;animation:float .65s ease-out forwards}
+@keyframes float{to{transform:translateY(-80px) scale(1.2);opacity:0}}
+.nextThumb{width:100%;aspect-ratio:1;border-radius:14px;object-fit:cover;border:2px solid #0f5e91}
+.arrow{font-size:34px;color:var(--yellow);font-weight:1000;margin:2px 0}
+.nextLabel{color:var(--yellow);font-weight:900}
+.quickRow{display:grid;grid-template-columns:260px 1fr 330px;gap:10px;margin-top:10px}
+.quickCard{background:linear-gradient(180deg,#0b3150,#071d31);border:2px solid var(--line);border-radius:22px;padding:10px}
+.powerButton,.peakButton{border:0;border-radius:14px;padding:11px 12px;font-weight:1000;width:100%}
+.powerButton{background:#2f7dcc;color:#fff}.peakButton{background:linear-gradient(90deg,#ff4a42,#ff8b21,#ff4a42);color:#fff}
+.quickCenter{display:flex;align-items:center;justify-content:center;color:var(--yellow);font-weight:1000;font-size:clamp(18px,2.6vw,30px);text-align:center}
+.bottomNav{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);width:min(96%,1100px);display:grid;grid-template-columns:repeat(5,1fr);background:#061a2af5;border:2px solid var(--line);border-radius:22px;overflow:hidden;z-index:20;backdrop-filter:blur(10px)}
+.bottomNav button{border:0;border-right:1px solid #0e527f;background:transparent;color:#fff;padding:10px 4px;font-weight:850}
+.bottomNav button:last-child{border-right:0}.bottomNav button.active{background:var(--yellow);color:#111}
+.tab{display:none}.tab.active{display:block}
+.contentPanel{max-width:1000px;margin:12px auto;background:linear-gradient(180deg,#0b3150,#071d31);border:2px solid var(--line);border-radius:22px;padding:14px}
+.contentPanel h2{color:var(--yellow);margin:0 0 10px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.item{background:#061a2a;border:1px solid #0e527f;border-radius:15px;padding:10px}
+.buy{width:100%;border:0;border-radius:11px;padding:10px;background:var(--yellow);font-weight:900;margin-top:6px}
+.buy:disabled{opacity:.4}
+.modeRow{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:9px}
+.mode{border:1px solid #0e527f;background:#061a2a;color:#fff;border-radius:10px;padding:8px 4px;font-weight:850}.mode.active{background:var(--yellow);color:#111}
+@media(max-width:760px){
+ body{padding-bottom:76px}.shell{padding:6px}
+ .topbar{grid-template-columns:repeat(3,1fr);gap:5px}.logo{grid-column:1/-1;height:74px;min-height:0}.audioBtns{position:absolute;right:8px;top:8px}.round{width:42px;height:42px}
+ .stat{padding:7px 3px;border-radius:15px}.stat b{font-size:19px}.stat small{font-size:10px}
+ .stageTop{margin:6px 0;padding:7px 10px}
+ .gameGrid{grid-template-columns:54px minmax(0,1fr) 64px;gap:5px}
+ .sidePanel{padding:5px;border-radius:15px}.sidePanel h3{font-size:10px}.anxietyMeter{height:210px;width:24px;padding:2px}.bigPct{font-size:14px}
+ .hero{min-height:0;height:min(58vh,540px);border-radius:18px}.cta{font-size:17px;padding:5px 9px;border-width:2px}
+ .nextLabel{font-size:10px}.arrow{font-size:24px}
+ .quickRow{grid-template-columns:1fr 1fr;margin-top:6px}.quickCenter{display:none}.quickCard{padding:7px;border-radius:15px}.powerButton,.peakButton{font-size:12px;padding:9px 5px}
+ .bottomNav{bottom:5px;border-radius:16px}.bottomNav button{font-size:11px;padding:8px 2px}
+ .grid2{grid-template-columns:1fr}.modeRow{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<section id="tabBanana" class="tab active">
+ <div class="topbar">
+  <div class="logo"><img src="assets/logo.jpg" alt="Pic Banane"></div>
+  <div class="stat"><b>🍌 <span id="money">0</span></b><small>bananes volées</small></div>
+  <div class="stat"><b>👆 +<span id="clickVal">1</span></b><small>par clic</small></div>
+  <div class="stat"><b>⏱ <span id="secVal">0</span></b><small>par seconde</small></div>
+  <div class="audioBtns"><button id="sfxBtn" class="round">🔊</button><button id="musicBtn" class="round">🎵</button></div>
+ </div>
+ <div class="stageTop">
+  <div class="stageTopLine"><span id="stageName">Stade 1 — Méfiant</span><b id="stagePct">0%</b></div>
+  <div class="stageBar"><div id="stageFill" class="stageFill"></div></div>
+  <div class="stageHint">Plus tu lui voles ses bananes, plus il devient nerveux.</div>
+ </div>
+ <div class="gameGrid">
+  <aside class="sidePanel">
+   <h3>Pic d'angoisse</h3>
+   <div class="anxietyMeter"><div id="anxietyFill" class="anxietyFill"></div></div>
+   <div id="anxietyPct" class="bigPct">0%</div>
+  </aside>
+  <div id="hero" class="hero">
+   <img src="assets/hero.jpg" alt="Singe nerveux avec sa banane">
+   <button id="bananaHit" class="bananaHit" aria-label="Voler une banane"></button>
+   <div class="cta">TAPE LA BANANE !</div>
+  </div>
+  <aside class="sidePanel">
+   <h3>Prochain stade</h3>
+   <img src="assets/stage-2.jpg" class="nextThumb" alt="">
+   <div id="nextCount" style="font-weight:900;margin:5px 0">0 / 500</div>
+   <div class="arrow">↓</div>
+   <img src="assets/stage-3.jpg" class="nextThumb" alt="">
+   <div id="nextStage" class="nextLabel">Stade 2</div>
+  </aside>
+ </div>
+ <div class="quickRow">
+  <div class="quickCard"><button id="frenzyQuick" class="powerButton">▶ Frénésie ×2 — 30 s</button></div>
+  <div class="quickCenter">Vole les bananes. Fais monter son angoisse.</div>
+  <div class="quickCard"><button id="peakQuick" class="peakButton">🔥 DÉCLENCHER UN PIC BANANE</button></div>
+ </div>
+</section>
+
+<section id="tabTribe" class="tab">
+ <div class="contentPanel"><h2>🏕️ Tribu</h2>
+  <div class="modeRow">
+   <button class="mode active" data-mode="1">x1</button><button class="mode" data-mode="5">x5</button><button class="mode" data-mode="10">x10</button>
+   <button class="mode" data-mode="100">x100</button><button class="mode" data-mode="max">MAX</button><button class="mode" data-mode="next">Palier</button>
+  </div>
+  <div id="tribeGrid" class="grid2"></div>
+ </div>
+</section>
+
+<section id="tabUpgrades" class="tab">
+ <div class="contentPanel"><h2>⬆️ Améliorations</h2><div id="upgradeGrid" class="grid2"></div></div>
+</section>
+
+<section id="tabPowers" class="tab">
+ <div class="contentPanel"><h2>⚡ Pouvoirs</h2><div id="powerGrid" class="grid2"></div></div>
+</section>
+
+<section id="tabStats" class="tab">
+ <div class="contentPanel"><h2>📊 Statistiques</h2>
+  <div class="grid2">
+   <div class="item">Bananes volées : <b id="statMoney">0</b></div>
+   <div class="item">Clics : <b id="statClicks">0</b></div>
+   <div class="item">Pic Banane : <b id="statPeak">0</b></div>
+   <div class="item">Multiplicateur permanent : <b id="statMult">×1</b></div>
+  </div>
+ </div>
+</section>
+</div>
+
+<nav class="bottomNav">
+ <button class="active" data-tab="tabBanana">🍌<br>Banane</button>
+ <button data-tab="tabTribe">🏕️<br>Tribu</button>
+ <button data-tab="tabUpgrades">⬆️<br>Améliorations</button>
+ <button data-tab="tabPowers">⚡<br>Pouvoirs</button>
+ <button data-tab="tabStats">📊<br>Stats</button>
+</nav>
+
+<script>
+const producers=[
+ {id:'ramasseur',name:'Ramasseur maladroit',base:15,inc:.2},
+ {id:'grimpeur',name:'Grimpeur nerveux',base:100,inc:1.2},
+ {id:'jardinier',name:'Jardinier tropical',base:650,inc:6.5},
+ {id:'vendeur',name:'Vendeur de marché',base:3200,inc:30},
+ {id:'chef',name:'Chef de tribu',base:16000,inc:145},
+ {id:'explorateur',name:'Explorateur de jungle',base:80000,inc:650},
+ {id:'labo',name:'Laboratoire anti-stress',base:400000,inc:2900},
+ {id:'temple',name:'Temple de la Banane',base:2100000,inc:13000}
+];
+const upgrades=[
+ {n:'Index musclé',cost:1500,bonus:1},
+ {n:'Double phalange',cost:10000,bonus:4},
+ {n:'Poigne de gorille',cost:50000,bonus:12},
+ {n:'Doigt turbo',cost:250000,bonus:35},
+ {n:'Main bananique',cost:1000000,bonus:100},
+ {n:'Toucher légendaire',cost:5000000,bonus:300}
+];
+const powers=[
+ {id:'frenzy',n:'Frénésie Banane',cost:2500,dur:30,cd:90,click:2,prod:2},
+ {id:'rain',n:'Pluie de Bananes',cost:150000,dur:30,cd:300,click:1,prod:3},
+ {id:'panic',n:'Panique Totale',cost:1000000,dur:45,cd:900,click:6,prod:5}
+];
+const stages=[
+ {n:'Stade 1 — Méfiant',at:0},
+ {n:'Stade 2 — Anxieux',at:500},
+ {n:'Stade 3 — Angoissé',at:2500},
+ {n:'Stade 4 — Paniqué',at:15000},
+ {n:'Stade 5 — Angoisse extrême',at:100000}
+];
+const milestones=[25,50,100,250,500];
+const defaultState={money:0,total:0,clicks:0,peak:0,counts:{},upgrade:0,power:{},sfx:true,music:true,last:Date.now()};
+let state=load(),mode='1',hitSide=0;
+const $=id=>document.getElementById(id);
+function load(){try{return {...defaultState,...JSON.parse(localStorage.getItem('picBananeV3')||'{}')}}catch(e){return {...defaultState}}}
+function save(){state.last=Date.now();localStorage.setItem('picBananeV3',JSON.stringify(state))}
+function fmt(n){if(n<1000)return Math.floor(n).toLocaleString('fr-FR');let u=['k','M','Md','B','T'],i=-1;while(n>=1000&&i<u.length-1){n/=1000;i++}return n.toLocaleString('fr-FR',{maximumFractionDigits:2})+' '+u[i]}
+function peakMult(){return 1+state.peak*.5}
+function activeMult(type){let now=Date.now(),m=1;powers.forEach(p=>{let s=state.power[p.id]||{};if((s.until||0)>now)m*=type==='click'?p.click:p.prod});return m}
+function clickBonus(){return upgrades.slice(0,state.upgrade).reduce((a,x)=>a+x.bonus,0)}
+function clickValue(){return Math.max(1,Math.floor((1+clickBonus())*peakMult()*activeMult('click')))}
+function producerMult(c){if(c>=500)return 12;if(c>=250)return 8;if(c>=100)return 5;if(c>=50)return 3;if(c>=25)return 2;return 1}
+function prodIncome(p){let c=state.counts[p.id]||0;return c*p.inc*producerMult(c)*peakMult()}
+function perSec(){return producers.reduce((a,p)=>a+prodIncome(p),0)*activeMult('prod')}
+function stageIndex(){let i=0;for(let x=0;x<stages.length;x++)if(state.total>=stages[x].at)i=x;return i}
+function currentStageProgress(){let i=stageIndex(),cur=stages[i],next=stages[i+1];if(!next)return 100;return Math.max(0,Math.min(100,(state.total-cur.at)/(next.at-cur.at)*100))}
+function priceAt(p,c){return Math.floor(p.base*Math.pow(1.15,c))}
+function totalCost(p,q){let c=state.counts[p.id]||0,t=0;for(let i=0;i<q;i++)t+=priceAt(p,c+i);return t}
+function maxQty(p){let c=state.counts[p.id]||0,t=0,q=0;while(q<100000){let n=priceAt(p,c+q);if(t+n>state.money)break;t+=n;q++}return q}
+function wanted(p){let c=state.counts[p.id]||0;if(mode==='max')return maxQty(p);if(mode==='next'){let n=milestones.find(x=>c<x);return n?n-c:0}return +mode}
+function affordable(p,w){let c=state.counts[p.id]||0,t=0,q=0;for(let i=0;i<w;i++){let n=priceAt(p,c+i);if(t+n>state.money)break;t+=n;q++}return q}
+function peakCost(){return Math.floor(1000000*Math.pow(10,state.peak))}
+function seconds(s){s=Math.max(0,Math.ceil(s));if(s<60)return s+' s';return Math.floor(s/60)+' min '+String(s%60).padStart(2,'0')+' s'}
+
+let popAudio=null,musicAudio=null,audioUnlocked=false;
+try{popAudio=new Audio('audio/banana-pop.wav');musicAudio=new Audio('audio/jungle-loop.wav');musicAudio.loop=true;musicAudio.volume=.3}catch(e){}
+function unlockAudio(){if(audioUnlocked)return;audioUnlocked=true;if(state.music&&musicAudio)musicAudio.play().catch(()=>{})}
+function playPop(){if(!state.sfx||!popAudio)return;let a=popAudio.cloneNode();a.volume=.7;a.play().catch(()=>{})}
+
+function renderMain(){
+ let st=stageIndex(),prog=currentStageProgress(),next=stages[Math.min(st+1,stages.length-1)];
+ $('money').textContent=fmt(state.money);$('clickVal').textContent=fmt(clickValue());$('secVal').textContent=fmt(perSec());
+ $('stageName').textContent=stages[st].n;$('stagePct').textContent=Math.floor(prog)+'%';$('stageFill').style.width=prog+'%';
+ $('anxietyPct').textContent=Math.floor(prog)+'%';$('anxietyFill').style.height=prog+'%';
+ $('nextCount').textContent=st<stages.length-1?`${fmt(state.total-stages[st].at)} / ${fmt(stages[st+1].at-stages[st].at)}`:'MAX';
+ $('nextStage').textContent=next.n.split('—')[0].trim();
+ $('peakQuick').textContent=`🔥 PIC BANANE — ${fmt(peakCost())} 🍌`;
+ $('peakQuick').disabled=state.money<peakCost();
+ $('frenzyQuick').disabled=state.money<2500 || ((state.power.frenzy||{}).cool||0)>Date.now();
+ $('sfxBtn').textContent=state.sfx?'🔊':'🔇';$('musicBtn').textContent=state.music?'🎵':'🚫';
+ $('statMoney').textContent=fmt(state.money);$('statClicks').textContent=fmt(state.clicks);$('statPeak').textContent=state.peak;$('statMult').textContent='×'+peakMult().toFixed(2)
+}
+function renderTribe(){
+ $('tribeGrid').innerHTML='';
+ producers.forEach(p=>{
+   let c=state.counts[p.id]||0,w=wanted(p),q=w?affordable(p,w):0,price=q?totalCost(p,q):0;
+   let el=document.createElement('div');el.className='item';
+   el.innerHTML=`<b>${p.name} ×${c}</b><div style="color:#9de2b5">${fmt(prodIncome(p))} bananes/s</div><div style="font-size:12px;color:#b8d3e6">Bonus quantité ×${producerMult(c)}</div><button class="buy" ${q<=0?'disabled':''}>${q?`Acheter ×${q} — ${fmt(price)} 🍌`:'Pas assez'}</button>`;
+   el.querySelector('button').onclick=()=>{let q2=affordable(p,wanted(p));if(!q2)return;let pc=totalCost(p,q2);state.money-=pc;state.counts[p.id]=(state.counts[p.id]||0)+q2;save();renderAll()};
+   $('tribeGrid').appendChild(el)
+ })
+}
+function renderUpgrades(){
+ $('upgradeGrid').innerHTML='';
+ upgrades.forEach((u,i)=>{
+   let bought=i<state.upgrade,next=i===state.upgrade,el=document.createElement('div');el.className='item';
+   el.innerHTML=`<b>${u.n}</b><div>+${u.bonus} par clic</div><button class="buy" ${(bought||!next||state.money<u.cost)?'disabled':''}>${bought?'Achetée':fmt(u.cost)+' 🍌'}</button>`;
+   el.querySelector('button').onclick=()=>{if(!next||state.money<u.cost)return;state.money-=u.cost;state.upgrade++;save();renderAll()};
+   $('upgradeGrid').appendChild(el)
+ })
+}
+function renderPowers(){
+ $('powerGrid').innerHTML='';let now=Date.now();
+ powers.forEach(p=>{
+   let s=state.power[p.id]||{},active=(s.until||0)>now,cool=(s.cool||0)>now,el=document.createElement('div');el.className='item';
+   el.innerHTML=`<b>${p.n}</b><div>Durée ${seconds(p.dur)} · recharge ${seconds(p.cd)}</div><div>clic ×${p.click} · prod ×${p.prod}</div><button class="buy" ${(active||cool||state.money<p.cost)?'disabled':''}>${active?'Actif '+seconds((s.until-now)/1000):cool?'Recharge '+seconds((s.cool-now)/1000):'Activer — '+fmt(p.cost)+' 🍌'}</button>`;
+   el.querySelector('button').onclick=()=>{if(state.money<p.cost)return;let n=Date.now();state.money-=p.cost;state.power[p.id]={until:n+p.dur*1000,cool:n+p.cd*1000};save();renderAll()};
+   $('powerGrid').appendChild(el)
+ })
+}
+function renderAll(){renderMain();renderTribe();renderUpgrades();renderPowers()}
+
+$('bananaHit').addEventListener('pointerdown',e=>{
+ e.preventDefault();unlockAudio();playPop();let gain=clickValue();state.money+=gain;state.total+=gain;state.clicks++;
+ let f=document.createElement('span');f.className='float';f.textContent='+'+fmt(gain);f.style.left=(e.offsetX+20)+'px';f.style.top=(e.offsetY+20)+'px';$('hero').appendChild(f);setTimeout(()=>f.remove(),700);
+ hitSide=1-hitSide;$('hero').classList.remove('flash1','flash2');void $('hero').offsetWidth;$('hero').classList.add(hitSide?'flash1':'flash2');
+ save();renderAll()
+});
+$('peakQuick').onclick=()=>{let c=peakCost();if(state.money<c)return;state.money=0;state.total=0;state.counts={};state.upgrade=0;state.power={};state.peak++;save();renderAll()};
+$('frenzyQuick').onclick=()=>{let p=powers[0],n=Date.now();if(state.money<p.cost)return;state.money-=p.cost;state.power[p.id]={until:n+p.dur*1000,cool:n+p.cd*1000};save();renderAll()};
+$('sfxBtn').onclick=()=>{state.sfx=!state.sfx;save();renderAll()};
+$('musicBtn').onclick=()=>{unlockAudio();state.music=!state.music;if(musicAudio){if(state.music)musicAudio.play().catch(()=>{});else musicAudio.pause()}save();renderAll()};
+document.querySelectorAll('.bottomNav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.bottomNav button').forEach(x=>x.classList.remove('active'));$(b.dataset.tab).classList.add('active');b.classList.add('active');window.scrollTo(0,0)});
+document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.mode').forEach(x=>x.classList.toggle('active',x===b));renderTribe()});
+document.addEventListener('pointerdown',unlockAudio,{once:true});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+
+setInterval(()=>{let g=perSec()/10;state.money+=g;state.total+=g;renderMain()},100);
+setInterval(save,10000);
+renderAll();
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+</script>
+</body>
+</html>
