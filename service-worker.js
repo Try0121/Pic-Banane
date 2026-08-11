@@ -1,4 +1,4 @@
-const CACHE="pic-banane-v3";
+const CACHE="pic-banane-v3-1";
 const CORE=["./","./index.html","./manifest.webmanifest","./assets/hero.jpg","./assets/logo.jpg","./assets/stage-2.jpg","./assets/stage-3.jpg","./icons/icon-192.png","./icons/icon-512.png","./icons/apple-touch-icon.png"];
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});

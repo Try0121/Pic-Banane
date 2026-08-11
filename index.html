@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>Pic Banane V3</title>
+<title>Pic Banane V3.1</title>
 <style>
 :root{
  --bg:#04131f;--nav:#071a2a;--panel:#08233a;--panel2:#0d3150;--line:#126aa4;
@@ -20,7 +20,7 @@ button{font:inherit}
 .shell{max-width:1180px;margin:auto;padding:10px}
 .topbar{display:grid;grid-template-columns:1.15fr repeat(3,1fr) auto;gap:8px;align-items:stretch}
 .logo{border-radius:22px;overflow:hidden;border:2px solid var(--line);background:#03111d;min-height:86px}
-.logo img{width:100%;height:100%;object-fit:cover;display:block}
+.logo img{width:100%;height:100%;object-fit:contain;display:block;background:#03111d}
 .stat{background:linear-gradient(180deg,#0b3150,#071d31);border:2px solid var(--line);border-radius:22px;padding:10px 8px;text-align:center;box-shadow:0 8px 25px #0006}
 .stat b{display:block;color:#fff;font-size:clamp(20px,3vw,34px);line-height:1}
 .stat small{color:var(--muted);font-size:12px}
@@ -38,7 +38,7 @@ button{font:inherit}
 .anxietyMeter{height:300px;width:40px;margin:8px auto;border:3px solid #135f91;border-radius:999px;background:#03111c;padding:4px;display:flex;align-items:end}
 .anxietyFill{width:100%;height:0;border-radius:999px;background:linear-gradient(180deg,#ffe700,#ffac00,#ff4d2e);transition:height .25s}
 .bigPct{font-size:26px;color:var(--yellow);font-weight:1000}
-.hero{position:relative;min-height:600px;border:2px solid var(--line);border-radius:28px;overflow:hidden;background:#061a2a;box-shadow:0 15px 40px #0008}
+.hero{position:relative;min-height:520px;border:2px solid var(--line);border-radius:28px;overflow:hidden;background:#061a2a;box-shadow:0 15px 40px #0008}
 .hero img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .bananaHit{position:absolute;left:47%;top:34%;width:37%;height:42%;border:0;background:transparent;touch-action:manipulation;cursor:pointer}
 .bananaHit:active{transform:scale(.97)}
@@ -69,18 +69,57 @@ button{font:inherit}
 .modeRow{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:9px}
 .mode{border:1px solid #0e527f;background:#061a2a;color:#fff;border-radius:10px;padding:8px 4px;font-weight:850}.mode.active{background:var(--yellow);color:#111}
 @media(max-width:760px){
- body{padding-bottom:76px}.shell{padding:6px}
- .topbar{grid-template-columns:repeat(3,1fr);gap:5px}.logo{grid-column:1/-1;height:74px;min-height:0}.audioBtns{position:absolute;right:8px;top:8px}.round{width:42px;height:42px}
- .stat{padding:7px 3px;border-radius:15px}.stat b{font-size:19px}.stat small{font-size:10px}
- .stageTop{margin:6px 0;padding:7px 10px}
- .gameGrid{grid-template-columns:54px minmax(0,1fr) 64px;gap:5px}
- .sidePanel{padding:5px;border-radius:15px}.sidePanel h3{font-size:10px}.anxietyMeter{height:210px;width:24px;padding:2px}.bigPct{font-size:14px}
- .hero{min-height:0;height:min(58vh,540px);border-radius:18px}.cta{font-size:17px;padding:5px 9px;border-width:2px}
- .nextLabel{font-size:10px}.arrow{font-size:24px}
- .quickRow{grid-template-columns:1fr 1fr;margin-top:6px}.quickCenter{display:none}.quickCard{padding:7px;border-radius:15px}.powerButton,.peakButton{font-size:12px;padding:9px 5px}
- .bottomNav{bottom:5px;border-radius:16px}.bottomNav button{font-size:11px;padding:8px 2px}
- .grid2{grid-template-columns:1fr}.modeRow{grid-template-columns:repeat(3,1fr)}
+ body{padding-bottom:72px}
+ .shell{padding:4px}
+ .topbar{grid-template-columns:repeat(3,1fr);gap:4px}
+ .logo{grid-column:1/-1;height:54px;min-height:0;border-radius:14px}
+ .logo img{object-fit:contain}
+ .audioBtns{position:absolute;right:6px;top:6px;z-index:3}
+ .round{width:34px;height:34px;font-size:16px;border-width:1px}
+ .stat{padding:5px 2px;border-radius:12px;border-width:1px}
+ .stat b{font-size:17px}
+ .stat small{font-size:9px}
+ .stageTop{margin:4px 0;padding:5px 8px;border-radius:13px;border-width:1px}
+ .stageTopLine{font-size:13px}
+ .stageBar{height:10px;margin-top:4px;border-width:1px}
+ .stageHint{font-size:10px;margin-top:2px}
+ .gameGrid{grid-template-columns:45px minmax(0,1fr) 54px;gap:3px}
+ .sidePanel{padding:3px;border-radius:11px;border-width:1px}
+ .sidePanel h3{font-size:8px;line-height:1.1;margin:1px 0 4px}
+ .anxietyMeter{height:145px;width:18px;padding:1px;border-width:1px}
+ .bigPct{font-size:12px}
+ .hero{min-height:0;height:47vh;max-height:430px;border-radius:13px;border-width:1px}
+ .hero img{object-position:center center}
+ .cta{font-size:14px;padding:4px 7px;border-width:2px;border-radius:11px;bottom:2%}
+ .nextThumb{border-radius:8px;border-width:1px}
+ .nextLabel{font-size:8px}
+ .arrow{font-size:18px;margin:0}
+ #nextCount{font-size:9px!important;margin:2px 0!important}
+ .quickRow{grid-template-columns:1fr 1fr;margin-top:4px;gap:4px}
+ .quickCenter{display:none}
+ .quickCard{padding:4px;border-radius:11px;border-width:1px}
+ .powerButton,.peakButton{font-size:10px;padding:7px 3px;border-radius:9px}
+ .bottomNav{bottom:4px;border-radius:12px;border-width:1px}
+ .bottomNav button{font-size:9px;padding:6px 1px;line-height:1.1}
+ .grid2{grid-template-columns:1fr}
+ .modeRow{grid-template-columns:repeat(3,1fr)}
 }
+
+.hero:after{
+ content:"";
+ position:absolute;
+ left:0;right:0;bottom:0;
+ height:15%;
+ background:linear-gradient(to top,rgba(4,19,31,.96),rgba(4,19,31,.78),transparent);
+ pointer-events:none;
+ z-index:1;
+}
+.cta{z-index:2}
+.bananaHit{z-index:3}
+@media(max-width:760px){
+ .hero:after{height:18%}
+}
+
 </style>
 </head>
 <body>
@@ -96,7 +135,7 @@ button{font:inherit}
  <div class="stageTop">
   <div class="stageTopLine"><span id="stageName">Stade 1 — Méfiant</span><b id="stagePct">0%</b></div>
   <div class="stageBar"><div id="stageFill" class="stageFill"></div></div>
-  <div class="stageHint">Plus tu lui voles ses bananes, plus il devient nerveux.</div>
+  <div class="stageHint">Vole ses bananes → son angoisse monte.</div>
  </div>
  <div class="gameGrid">
   <aside class="sidePanel">
