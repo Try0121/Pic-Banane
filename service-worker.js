@@ -1,5 +1,0 @@
-const CACHE="pic-banane-v10";
-const CORE=["./","./index.html","./manifest.webmanifest","./assets/jungle-bg.jpg","./assets/banana-original.png","./assets/monkey-stage-1.png","./assets/monkey-stage-2.png","./assets/monkey-stage-3.png","./assets/monkey-stage-4.png","./assets/monkey-stage-5.png","./icons/icon-192.png","./icons/icon-512.png","./icons/apple-touch-icon.png"];
-self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
-self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;if(e.request.mode==="navigate"){e.respondWith(fetch(e.request).then(r=>{let c=r.clone();caches.open(CACHE).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match("./index.html")))}else{e.respondWith(caches.match(e.request).then(h=>h||fetch(e.request)))}});
