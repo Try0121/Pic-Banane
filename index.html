@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#ffd800">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>Pic Banane V7</title>
+<style>
+:root{
+ --bg:#04131f;--panel:#082943;--panel2:#0c3657;--line:#1572ad;
+ --yellow:#ffd800;--orange:#ff971e;--red:#ff4f43;--text:#fff;--muted:#c4d9e8;
+ --green:#77df98;--blue:#43a5ff;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#04131f;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;overscroll-behavior:none}
+body{overflow:hidden;background:radial-gradient(circle at 50% 18%,#0d456b,#04131f 70%)}
+button{font:inherit}
+.app{height:100dvh;max-width:1180px;margin:auto;padding:6px;display:flex;flex-direction:column}
+.tab{display:none}.tab.active{display:block}
+.tab#bananaTab.active{height:calc(100dvh - 68px);overflow:hidden}
+.glass{
+ background:linear-gradient(180deg,rgba(10,49,81,.96),rgba(5,26,43,.96));
+ border:2px solid var(--line);box-shadow:0 8px 24px #0008;backdrop-filter:blur(7px)
+}
+.top{display:grid;grid-template-columns:1.1fr repeat(3,1fr) auto;gap:6px;flex:0 0 auto}
+.logo{border-radius:19px;display:flex;align-items:center;justify-content:center;padding:5px 10px;font-weight:1000;color:var(--yellow);font-size:clamp(27px,4.2vw,48px);text-shadow:3px 3px #000;transform:rotate(-1deg)}
+.stat{border-radius:17px;text-align:center;padding:7px 5px}
+.stat b{display:block;font-size:clamp(18px,2.7vw,31px);line-height:1.05}.stat small{font-size:11px;color:var(--muted)}
+.audio{display:flex;gap:5px}.round{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:#082943;color:#fff;font-size:18px}
+.stagebar{max-width:780px;margin:5px auto;border-radius:16px;padding:6px 11px;flex:0 0 auto}
+.stageLine{display:flex;justify-content:space-between;font-weight:900}.stageLine b{color:var(--yellow)}
+.track{height:11px;background:#03131f;border:2px solid #126293;border-radius:99px;overflow:hidden;margin-top:4px}.fill{height:100%;width:0;background:linear-gradient(90deg,#ffdf00,#ff9b00,#ff4f43);transition:.2s}
+.hint{text-align:center;color:var(--muted);font-size:10px;margin-top:3px}
+.game{display:grid;grid-template-columns:120px minmax(0,1fr) 145px;gap:6px;height:calc(100dvh - 268px);min-height:360px}
+.side{border-radius:19px;padding:7px;text-align:center}.side h3{font-size:14px;margin:2px 0 7px}
+.vert{height:64%;width:38px;margin:8px auto;background:#02111b;border:2px solid #126293;border-radius:99px;padding:4px;display:flex;align-items:end}
+.vert span{width:100%;height:0;border-radius:99px;background:linear-gradient(180deg,#ffe000,#ff9e00,#ff4b38);transition:.2s}.pct{font-size:23px;color:var(--yellow);font-weight:1000}
+.scene{position:relative;height:100%;overflow:hidden;border-radius:26px;border:2px solid var(--line);background:url('assets/jungle-bg.jpg') center/cover;box-shadow:0 15px 38px #0009;isolation:isolate}
+.scene:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.28),transparent 45%),radial-gradient(circle at 55% 58%,rgba(255,216,0,.11),transparent 35%);pointer-events:none}
+.monkey{position:absolute;left:3%;bottom:3%;width:67%;height:82%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 12px 8px #0009);z-index:2;pointer-events:none}
+.banana{position:absolute;right:-2%;bottom:4%;width:62%;height:60%;object-fit:contain;filter:drop-shadow(0 13px 9px #0009);z-index:3;pointer-events:none;transform-origin:50% 70%}
+.banana.hitA{animation:hitA .16s ease}.banana.hitB{animation:hitB .16s ease}
+@keyframes hitA{35%{transform:translate(12px,-4px) rotate(7deg) scale(.94)}70%{transform:translate(-5px,2px) rotate(-3deg) scale(1.02)}}
+@keyframes hitB{35%{transform:translate(-12px,-4px) rotate(-7deg) scale(.94)}70%{transform:translate(5px,2px) rotate(3deg) scale(1.02)}}
+.hit{position:absolute;right:0;bottom:4%;width:62%;height:60%;border:0;background:transparent;z-index:5;touch-action:manipulation}
+.bubble{position:absolute;left:3%;top:4%;max-width:44%;padding:10px 13px;background:#fff;color:#101010;border:4px solid #111;border-radius:26px;font-weight:1000;font-size:clamp(14px,2vw,25px);line-height:1.04;z-index:4;transform:rotate(-2deg)}
+.bubble:after{content:"";position:absolute;right:13%;bottom:-20px;border:11px solid transparent;border-top-color:#111}
+.cta{position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);z-index:6;background:linear-gradient(180deg,#fffbd1,#ffd800 60%,#ff9d00);border:4px solid #111;border-radius:19px;padding:8px 18px;color:#111;font-size:clamp(18px,3vw,32px);font-weight:1000;white-space:nowrap;box-shadow:0 0 20px #ffd800aa}
+.float{position:absolute;z-index:9;color:var(--yellow);font-size:28px;font-weight:1000;text-shadow:2px 2px #000;pointer-events:none;animation:float .7s forwards}
+@keyframes float{to{transform:translateY(-82px) scale(1.2);opacity:0}}
+.thumb{width:100%;aspect-ratio:1;object-fit:contain;background:#031521;border:1px solid #126293;border-radius:12px}.arrow{font-size:29px;color:var(--yellow);font-weight:1000}.nextTitle{font-size:12px;color:var(--yellow);font-weight:900}
+.quickrow{display:grid;grid-template-columns:240px 1fr 290px;gap:6px;margin-top:5px;flex:0 0 auto}
+.quick{border-radius:16px;padding:5px}.qbtn{width:100%;border:0;border-radius:11px;padding:9px;font-weight:1000}.blue{background:linear-gradient(180deg,#4ca7ef,#246eb6);color:#fff}.red{background:linear-gradient(90deg,#ff493f,#ff951f,#ff493f);color:#fff}.centerText{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--yellow);font-weight:1000;font-size:clamp(15px,2vw,23px)}
+.nav{position:fixed;left:50%;bottom:5px;transform:translateX(-50%);width:min(96%,1100px);display:grid;grid-template-columns:repeat(5,1fr);border-radius:17px;overflow:hidden;z-index:20}
+.nav button{border:0;border-right:1px solid #104f78;background:#061a2af5;color:#fff;padding:7px 3px;font-weight:850}.nav button.active{background:linear-gradient(180deg,#ffe70b,#ffbd00);color:#111}
+.content{height:calc(100dvh - 78px);overflow:auto;max-width:1000px;margin:4px auto;padding-bottom:8px}.panel{border-radius:18px;padding:12px}.panel h2{margin:0 0 9px;color:var(--yellow)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.item{background:#061b2d;border:1px solid #12577f;border-radius:14px;padding:10px}.item b{display:block}.sub{font-size:12px;color:var(--muted);margin-top:3px}.green{font-size:12px;color:var(--green);margin-top:4px}
+.buy{width:100%;border:0;background:var(--yellow);color:#111;border-radius:10px;padding:9px;font-weight:900;margin-top:7px}.buy:disabled{opacity:.4}
+.modes{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:8px}.mode{border:1px solid #12577f;background:#061a2a;color:#fff;border-radius:10px;padding:8px 3px;font-weight:850}.mode.active{background:var(--yellow);color:#111}
+@media(max-width:760px){
+ .app{padding:3px}.tab#bananaTab.active{height:calc(100dvh - 55px)}
+ .top{grid-template-columns:repeat(3,1fr);gap:3px}.logo{grid-column:1/-1;height:38px;padding:0;font-size:23px;border-radius:9px;border-width:1px}
+ .audio{position:absolute;right:5px;top:5px;z-index:5}.round{width:27px;height:27px;font-size:11px;border-width:1px}
+ .stat{padding:4px 1px;border-radius:9px;border-width:1px}.stat b{font-size:15px}.stat small{font-size:8px}
+ .stagebar{margin:3px 0;padding:4px 6px;border-radius:9px;border-width:1px}.stageLine{font-size:11px}.track{height:7px;margin-top:2px;border-width:1px}.hint{font-size:8px;margin-top:1px}
+ .game{grid-template-columns:36px minmax(0,1fr) 44px;gap:2px;height:calc(100dvh - 212px);min-height:0}
+ .side{padding:2px;border-radius:8px;border-width:1px;overflow:hidden}.side h3{font-size:7px;line-height:1;margin:1px 0 3px}.vert{height:53%;width:13px;padding:1px;border-width:1px;margin:4px auto}.pct{font-size:10px}
+ .scene{border-radius:9px;border-width:1px}
+ .monkey{left:-4%;bottom:1%;width:77%;height:84%}.banana{right:-10%;bottom:0%;width:73%;height:66%}.hit{right:-3%;bottom:0%;width:72%;height:65%}
+ .bubble{left:2%;top:2%;max-width:55%;padding:4px 5px;border-width:2px;border-radius:10px;font-size:9px}.bubble:after{bottom:-9px;border-width:5px}
+ .cta{bottom:1%;font-size:11px;padding:3px 6px;border-width:2px;border-radius:8px}
+ .thumb{border-radius:5px}.arrow{font-size:14px}.nextTitle{font-size:7px}#nextCounter{font-size:7px!important;margin:2px 0!important}
+ .quickrow{grid-template-columns:1fr 1fr;gap:3px;margin-top:3px}.centerText{display:none}.quick{padding:3px;border-radius:8px;border-width:1px}.qbtn{font-size:9px;padding:6px 2px;border-radius:7px}
+ .nav{bottom:3px;border-radius:9px;border-width:1px}.nav button{font-size:8px;padding:4px 1px;line-height:1}
+ .content{height:calc(100dvh - 60px);margin:3px 0}.grid{grid-template-columns:1fr}.modes{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<section id="bananaTab" class="tab active">
+ <div class="top">
+  <div class="logo glass">PIC 🍌 BANANE</div>
+  <div class="stat glass"><b>🍌 <span id="money">0</span></b><small>bananes volées</small></div>
+  <div class="stat glass"><b>👆 +<span id="clickVal">1</span></b><small>par clic</small></div>
+  <div class="stat glass"><b>⏱ <span id="secVal">0</span></b><small>par seconde</small></div>
+  <div class="audio"><button id="sfx" class="round">🔊</button><button id="music" class="round">🎵</button></div>
+ </div>
+ <div class="stagebar glass">
+  <div class="stageLine"><span id="stageName">Stade 1 — Début d'angoisse</span><b id="stagePct">0%</b></div>
+  <div class="track"><div id="stageFill" class="fill"></div></div>
+  <div class="hint">Plus tu lui voles ses bananes, plus son angoisse monte.</div>
+ </div>
+ <div class="game">
+  <aside class="side glass"><h3>Pic d'angoisse</h3><div class="vert"><span id="verticalFill"></span></div><div id="verticalPct" class="pct">0%</div></aside>
+  <div id="scene" class="scene">
+   <img id="monkey" class="monkey" src="assets/monkey-stage-1.png" alt="Singe">
+   <img id="banana" class="banana" src="assets/banana.png" alt="Banane">
+   <div id="bubble" class="bubble">Oulà… bizarre cette situation…</div>
+   <button id="hit" class="hit" aria-label="Voler la banane"></button>
+   <div class="cta">TAPE LA BANANE !</div>
+  </div>
+  <aside class="side glass"><h3>Prochain stade</h3><img id="nextThumb" class="thumb" src="assets/monkey-stage-2.png"><div id="nextCounter" style="font-weight:900;margin:4px 0">0 / 500</div><div class="arrow">↓</div><div id="nextTitle" class="nextTitle">Stade 2</div></aside>
+ </div>
+ <div class="quickrow">
+  <div class="quick glass"><button id="frenzyQuick" class="qbtn blue">▶ Frénésie ×2 — 30 s</button></div>
+  <div class="centerText">Vole ses bananes. Fais monter son angoisse.</div>
+  <div class="quick glass"><button id="peakQuick" class="qbtn red">🔥 PIC BANANE</button></div>
+ </div>
+</section>
+
+<section id="tribeTab" class="tab"><div class="content panel glass"><h2>🏕️ Tribu</h2><div class="modes">
+<button class="mode active" data-mode="1">x1</button><button class="mode" data-mode="5">x5</button><button class="mode" data-mode="10">x10</button><button class="mode" data-mode="100">x100</button><button class="mode" data-mode="max">MAX</button><button class="mode" data-mode="next">Palier</button>
+</div><div id="tribeGrid" class="grid"></div></div></section>
+<section id="upgradeTab" class="tab"><div class="content panel glass"><h2>⬆️ Améliorations</h2><div id="upgradeGrid" class="grid"></div></div></section>
+<section id="powerTab" class="tab"><div class="content panel glass"><h2>⚡ Pouvoirs</h2><div id="powerGrid" class="grid"></div></div></section>
+<section id="statsTab" class="tab"><div class="content panel glass"><h2>📊 Stats</h2><div class="grid">
+<div class="item">Bananes volées<b id="statMoney">0</b></div><div class="item">Clics<b id="statClicks">0</b></div><div class="item">Pics Banane<b id="statPeak">0</b></div><div class="item">Multiplicateur<b id="statMult">×1</b></div>
+</div></div></section>
+</div>
+
+<nav class="nav glass">
+<button class="active" data-tab="bananaTab">🍌<br>Banane</button><button data-tab="tribeTab">🏕️<br>Tribu</button><button data-tab="upgradeTab">⬆️<br>Améliorations</button><button data-tab="powerTab">⚡<br>Pouvoirs</button><button data-tab="statsTab">📊<br>Stats</button>
+</nav>
+
+<script>
+const producers=[
+{id:'ramasseur',n:'Ramasseur maladroit',base:15,inc:.2},{id:'grimpeur',n:'Grimpeur nerveux',base:100,inc:1.2},{id:'jardinier',n:'Jardinier tropical',base:650,inc:6.5},{id:'vendeur',n:'Vendeur de marché',base:3200,inc:30},{id:'chef',n:'Chef de tribu',base:16000,inc:145},{id:'explorateur',n:'Explorateur de jungle',base:80000,inc:650},{id:'labo',n:'Laboratoire anti-stress',base:400000,inc:2900},{id:'temple',n:'Temple de la Banane',base:2100000,inc:13000}
+];
+const upgrades=[
+{n:'Index musclé',cost:1500,bonus:1},{n:'Double phalange',cost:10000,bonus:4},{n:'Poigne de gorille',cost:50000,bonus:12},{n:'Doigt turbo',cost:250000,bonus:35},{n:'Main bananique',cost:1000000,bonus:100},{n:'Toucher légendaire',cost:5000000,bonus:300}
+];
+const powers=[
+{id:'frenzy',n:'Frénésie Banane',cost:2500,dur:30,cd:90,click:2,prod:2},{id:'rain',n:'Pluie de Bananes',cost:150000,dur:30,cd:300,click:1,prod:3},{id:'panic',n:'Panique Totale',cost:1000000,dur:45,cd:900,click:6,prod:5}
+];
+const stages=[
+{n:"Début d'angoisse",at:0,msg:"Oulà… bizarre cette situation…"},
+{n:"Angoisse modérée",at:500,msg:"Je me sens inquiet…"},
+{n:"Angoisse marquée",at:2500,msg:"Je n'arrive pas à me calmer !"},
+{n:"Angoisse sévère",at:15000,msg:"C'EST TROP ! JE PANIQUE !!"},
+{n:"Angoisse extrême",at:100000,msg:"JE N'EN PEUX PLUS !!!"}
+];
+const milestones=[25,50,100,250,500];
+const def={money:0,total:0,clicks:0,peak:0,counts:{},upgrade:0,power:{},sfx:true,music:true,last:Date.now()};
+let state=load(),mode='1',side=0;
+const $=id=>document.getElementById(id);
+function load(){try{let old=JSON.parse(localStorage.getItem('picBananeV4')||'null'),cur=JSON.parse(localStorage.getItem('picBananeV7')||'null');let r=cur||old||{};return {...def,...r,counts:r.counts||{},power:r.power||{}}}catch(e){return {...def}}}
+function save(){state.last=Date.now();localStorage.setItem('picBananeV7',JSON.stringify(state))}
+function fmt(n){if(n<1000)return Math.floor(n).toLocaleString('fr-FR');let u=['k','M','Md','B','T'],i=-1;while(n>=1000&&i<u.length-1){n/=1000;i++}return n.toLocaleString('fr-FR',{maximumFractionDigits:2})+' '+u[i]}
+function peakMult(){return 1+state.peak*.5}
+function activeMult(t){let now=Date.now(),m=1;powers.forEach(p=>{let s=state.power[p.id]||{};if((s.until||0)>now)m*=t==='click'?p.click:p.prod});return m}
+function clickBonus(){return upgrades.slice(0,state.upgrade).reduce((a,x)=>a+x.bonus,0)}
+function clickValue(){return Math.max(1,Math.floor((1+clickBonus())*peakMult()*activeMult('click')))}
+function qmult(c){return c>=500?12:c>=250?8:c>=100?5:c>=50?3:c>=25?2:1}
+function income(p){let c=state.counts[p.id]||0;return c*p.inc*qmult(c)*peakMult()}
+function perSec(){return producers.reduce((a,p)=>a+income(p),0)*activeMult('prod')}
+function stageIndex(){let i=0;for(let x=0;x<stages.length;x++)if(state.total>=stages[x].at)i=x;return i}
+function progress(){let i=stageIndex(),cur=stages[i],next=stages[i+1];if(!next)return 100;return Math.max(0,Math.min(100,(state.total-cur.at)/(next.at-cur.at)*100))}
+function priceAt(p,c){return Math.floor(p.base*Math.pow(1.15,c))}
+function totalCost(p,q){let c=state.counts[p.id]||0,t=0;for(let i=0;i<q;i++)t+=priceAt(p,c+i);return t}
+function maxQty(p){let c=state.counts[p.id]||0,t=0,q=0;while(q<100000){let n=priceAt(p,c+q);if(t+n>state.money)break;t+=n;q++}return q}
+function wanted(p){let c=state.counts[p.id]||0;if(mode==='max')return maxQty(p);if(mode==='next'){let n=milestones.find(x=>c<x);return n?n-c:0}return +mode}
+function affordable(p,w){let c=state.counts[p.id]||0,t=0,q=0;for(let i=0;i<w;i++){let n=priceAt(p,c+i);if(t+n>state.money)break;t+=n;q++}return q}
+function peakCost(){return Math.floor(1000000*Math.pow(10,state.peak))}
+function seconds(s){s=Math.max(0,Math.ceil(s));if(s<60)return s+' s';return Math.floor(s/60)+' min '+String(s%60).padStart(2,'0')+' s'}
+
+let popAudio=null,musicAudio=null,unlocked=false;
+try{popAudio=new Audio('audio/banana-pop.wav');musicAudio=new Audio('audio/jungle-loop.wav');musicAudio.loop=true;musicAudio.volume=.28}catch(e){}
+function unlock(){if(unlocked)return;unlocked=true;if(state.music&&musicAudio)musicAudio.play().catch(()=>{})}
+function pop(){if(!state.sfx||!popAudio)return;let a=popAudio.cloneNode();a.volume=.72;a.play().catch(()=>{})}
+
+function renderMain(){
+ let i=stageIndex(),p=progress(),next=Math.min(i+1,stages.length-1);
+ $('money').textContent=fmt(state.money);$('clickVal').textContent=fmt(clickValue());$('secVal').textContent=fmt(perSec());
+ $('stageName').textContent=`Stade ${i+1} — ${stages[i].n}`;$('stagePct').textContent=Math.floor(p)+'%';$('stageFill').style.width=p+'%';$('verticalFill').style.height=p+'%';$('verticalPct').textContent=Math.floor(p)+'%';
+ $('monkey').src=`assets/monkey-stage-${i+1}.png`;$('bubble').textContent=stages[i].msg;
+ $('nextThumb').src=`assets/monkey-stage-${next+1}.png`;$('nextTitle').textContent=`Stade ${next+1}`;
+ $('nextCounter').textContent=i<stages.length-1?`${fmt(state.total-stages[i].at)} / ${fmt(stages[i+1].at-stages[i].at)}`:'MAX';
+ $('peakQuick').textContent=`🔥 PIC BANANE — ${fmt(peakCost())} 🍌`;$('peakQuick').disabled=state.money<peakCost();
+ let fs=state.power.frenzy||{};$('frenzyQuick').disabled=state.money<2500 || (fs.cool||0)>Date.now();
+ $('sfx').textContent=state.sfx?'🔊':'🔇';$('music').textContent=state.music?'🎵':'🚫';
+ $('statMoney').textContent=fmt(state.money);$('statClicks').textContent=fmt(state.clicks);$('statPeak').textContent=state.peak;$('statMult').textContent='×'+peakMult().toFixed(2)
+}
+function renderTribe(){
+ $('tribeGrid').innerHTML='';
+ producers.forEach(p=>{let c=state.counts[p.id]||0,w=wanted(p),q=w?affordable(p,w):0,price=q?totalCost(p,q):0,e=document.createElement('div');e.className='item';e.innerHTML=`<b>${p.n} ×${c}</b><div class="green">${fmt(income(p))} bananes/s</div><div class="sub">Bonus quantité ×${qmult(c)}</div><button class="buy" ${q<=0?'disabled':''}>${q?`Acheter ×${q} — ${fmt(price)} 🍌`:'Pas assez'}</button>`;e.querySelector('button').onclick=()=>{let q2=affordable(p,wanted(p));if(!q2)return;let pc=totalCost(p,q2);state.money-=pc;state.counts[p.id]=(state.counts[p.id]||0)+q2;save();renderAll()};$('tribeGrid').appendChild(e)})
+}
+function renderUpgrades(){
+ $('upgradeGrid').innerHTML='';upgrades.forEach((u,i)=>{let bought=i<state.upgrade,next=i===state.upgrade,e=document.createElement('div');e.className='item';e.innerHTML=`<b>${u.n}</b><div class="sub">+${u.bonus} par clic</div><button class="buy" ${(bought||!next||state.money<u.cost)?'disabled':''}>${bought?'Achetée':fmt(u.cost)+' 🍌'}</button>`;e.querySelector('button').onclick=()=>{if(!next||state.money<u.cost)return;state.money-=u.cost;state.upgrade++;save();renderAll()};$('upgradeGrid').appendChild(e)})
+}
+function renderPowers(){
+ $('powerGrid').innerHTML='';let now=Date.now();powers.forEach(p=>{let s=state.power[p.id]||{},act=(s.until||0)>now,cool=(s.cool||0)>now,e=document.createElement('div');e.className='item';e.innerHTML=`<b>${p.n}</b><div class="sub">durée ${seconds(p.dur)} · recharge ${seconds(p.cd)} · clic ×${p.click} · prod ×${p.prod}</div><button class="buy" ${(act||cool||state.money<p.cost)?'disabled':''}>${act?'Actif '+seconds((s.until-now)/1000):cool?'Recharge '+seconds((s.cool-now)/1000):'Activer — '+fmt(p.cost)+' 🍌'}</button>`;e.querySelector('button').onclick=()=>{if(act||cool||state.money<p.cost)return;let n=Date.now();state.money-=p.cost;state.power[p.id]={until:n+p.dur*1000,cool:n+p.cd*1000};save();renderAll()};$('powerGrid').appendChild(e)})
+}
+function renderAll(){renderMain();renderTribe();renderUpgrades();renderPowers()}
+
+$('hit').addEventListener('pointerdown',e=>{
+ e.preventDefault();unlock();pop();let g=clickValue();state.money+=g;state.total+=g;state.clicks++;
+ let f=document.createElement('span');f.className='float';f.textContent='+'+fmt(g);f.style.left=(e.offsetX+20)+'px';f.style.top=(e.offsetY+15)+'px';$('scene').appendChild(f);setTimeout(()=>f.remove(),700);
+ side=1-side;$('banana').classList.remove('hitA','hitB');void $('banana').offsetWidth;$('banana').classList.add(side?'hitA':'hitB');
+ save();renderAll()
+});
+$('peakQuick').onclick=()=>{let c=peakCost();if(state.money<c)return;state.money=0;state.total=0;state.counts={};state.upgrade=0;state.power={};state.peak++;save();renderAll()};
+$('frenzyQuick').onclick=()=>{let p=powers[0],n=Date.now(),s=state.power[p.id]||{};if((s.cool||0)>n||state.money<p.cost)return;state.money-=p.cost;state.power[p.id]={until:n+p.dur*1000,cool:n+p.cd*1000};save();renderAll()};
+$('sfx').onclick=()=>{state.sfx=!state.sfx;save();renderAll()};
+$('music').onclick=()=>{unlock();state.music=!state.music;if(musicAudio){if(state.music)musicAudio.play().catch(()=>{});else musicAudio.pause()}save();renderAll()};
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));$(b.dataset.tab).classList.add('active');b.classList.add('active');window.scrollTo(0,0)});
+document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.mode').forEach(x=>x.classList.toggle('active',x===b));renderTribe()});
+document.addEventListener('pointerdown',unlock,{once:true});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+setInterval(()=>{let g=perSec()/10;state.money+=g;state.total+=g;renderMain()},100);
+setInterval(save,10000);
+renderAll();
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+</script>
+</body>
+</html>
